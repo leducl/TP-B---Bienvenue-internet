@@ -1,0 +1,31 @@
+import socket
+
+with socket.socket() as s:
+    s.bind(("0.0.0.0", 8000))
+    s.listen(1)
+    print("Serveur en écoute...")
+    conn, addr = s.accept()
+    with conn:
+        print("Connexion de", addr)
+        ligne = conn.recv(1024).decode().splitlines()[0]
+        print("Ligne de requête :", ligne)
+
+        try:
+            methode, chemin, version = ligne.split()
+        except ValueError:
+            chemin = "/"
+
+        if chemin == "/motd":
+            corps = "Bienvenue chez CanaDuck !"
+        elif chemin == "/date":
+            corps = "Il est bientôt l'heure du canard."
+        else:
+            corps = "404 Not Found"
+
+        reponse = f"""HTTP/1.1 200 OK
+Content-Type: text/plain
+Content-Length: {len(corps)}
+Connection: close
+
+{corps}"""
+        conn.sendall(reponse.encode())
