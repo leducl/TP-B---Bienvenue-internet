@@ -1,0 +1,19 @@
+import socket
+
+with socket.socket() as s:
+    s.bind(("0.0.0.0", 8000))
+    s.listen(1)
+    print("En attente de connexion...")
+    conn, addr = s.accept()
+    with conn:
+        print("Connexion de", addr)
+        request = conn.recv(1024)
+        print(request.decode())
+
+        reponse = """HTTP/1.1 200 OK
+Content-Type: text/plain
+Content-Length: 12
+Connection: close
+
+Hello World!"""
+        conn.sendall(reponse.encode())
