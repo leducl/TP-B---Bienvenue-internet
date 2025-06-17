@@ -1,4 +1,6 @@
+----------------------------------------------------------------
 2.1 Serveur minimal - “Hello World”
+----------------------------------------------------------------
 
 1. Est-ce que votre client (navigateur, curl, telnet…) reçoit bien une réponse ? Quel contenu voyez-vous à l’écran ?
 → Oui, le client reçoit une réponse. À l’écran, on voit le texte "Hello World!" qui s’affiche.
@@ -25,7 +27,9 @@ D’autres peuvent bloquer ou ne pas afficher car ils ne savent pas combien de d
 Dans curl, ça dépend : il est assez souple mais peut signaler des erreurs.
 Le navigateur est le plus strict, il respecte bien le protocole HTTP et peut refuser d’afficher s’il manque des parties.
 
+----------------------------------------------------------------
 2.2 Serveur avec analyse du chemin
+----------------------------------------------------------------
 
 Quelle est la structure de la ligne de requête HTTP reçue côté serveur ? Quels sont les trois éléments que vous devez extraire ?
 → La ligne a trois parties : méthode (ex : GET), chemin (ex : /motd), version (ex : HTTP/1.1).
@@ -57,7 +61,9 @@ Que pourrait-il se passer si un utilisateur tape une URL comme /../../etc/passwd
 Traitez-vous le chemin comme une chaîne ou une ressource contrôlée ? Quelles protections ajouter ?
 → Actuellement comme une chaîne. Il faut valider le chemin et empêcher les accès non autorisés.
 
+----------------------------------------------------------------
 2.3 Serveur dynamique, avec /date
+----------------------------------------------------------------
 
 Quelle est la ligne exacte reçue par le serveur quand un client appelle /date ? Comment repérez-vous ce chemin ?
 → La ligne reçue est typiquement : GET /date HTTP/1.1.
