@@ -57,3 +57,46 @@ Que pourrait-il se passer si un utilisateur tape une URL comme /../../etc/passwd
 Traitez-vous le chemin comme une chaîne ou une ressource contrôlée ? Quelles protections ajouter ?
 → Actuellement comme une chaîne. Il faut valider le chemin et empêcher les accès non autorisés.
 
+2.3 Serveur dynamique, avec /date
+
+Quelle est la ligne exacte reçue par le serveur quand un client appelle /date ? Comment repérez-vous ce chemin ?
+→ La ligne reçue est typiquement : GET /date HTTP/1.1.
+Le chemin est repéré en découpant la ligne avec split() : methode, chemin, version = ligne.split().
+
+Comment déterminez-vous que la requête est terminée ? Quelle est l’utilité de la ligne vide à la fin de la requête ?
+→ La requête se termine quand une ligne vide (\r\n ou juste \n) est lue.
+Cette ligne vide marque la fin des en-têtes dans le protocole HTTP.
+
+Que contient la réponse retournée par votre serveur ? Est-ce que la date change à chaque appel ?
+→ La réponse contient une date et une heure au moment de la requête. Oui, elle change à chaque appel car elle est générée dynamiquement.
+
+Quel champ d’en-tête est indispensable pour que la réponse soit bien comprise par le client ? Que se passe-t-il si vous oubliez Content-Length ?
+→ Content-Length est indispensable. Sans lui, certains clients (navigateurs, curl) n'affichent rien ou restent bloqués.
+
+Que se passe-t-il si Content-Length est incorrect (trop petit ou trop grand) ? Testez avec curl, telnet, et un navigateur.
+→ Si la taille est trop petite : le message est tronqué.
+Si elle est trop grande : le client attend inutilement plus de données (peut "planter").
+
+Le corps de votre réponse contient-il des caractères spéciaux ou des retours à la ligne (\n) ? Comment sont-ils affichés selon le client utilisé ?
+→ Oui, \n peut apparaître.
+Dans telnet ou curl, il s'affiche tel quel.
+Dans un navigateur, il faut du HTML (<br> ou <p>) pour bien l’afficher.
+
+Que renvoie votre serveur si un autre chemin est demandé, par exemple /time ou /now ? Est-ce prévu ? Que se passe-t-il ?
+→ Si non prévu, le serveur renvoie une erreur 404 avec un message par défaut ou personnalisé.
+
+Est-ce que le serveur répond de manière fiable même si deux clients se connectent successivement ? Et en même temps ?
+→ Successivement : oui.
+En même temps : non, sauf si le serveur est multithreadé ou asynchrone.
+Avec socketserver.ThreadingMixIn, cela devient possible.
+
+Pourriez-vous ajouter un autre chemin dynamique (comme /uptime) ? Quelles informations pourraient être utiles à afficher ?
+→ Oui. Par exemple, /uptime pourrait afficher le temps écoulé depuis le lancement du serveur.
+
+Que faudrait-il faire pour rendre ce serveur un peu plus “propre” ou modulaire ? Est-ce que le code pourrait être réorganisé pour gérer plusieurs routes dynamiques plus facilement ?
+→ Oui. On peut créer une fonction par chemin, et utiliser un dictionnaire comme :
+routes = {
+    "/date": fonction_date,
+    "/uptime": fonction_uptime,
+}
+
