@@ -1,0 +1,37 @@
+import socket
+from datetime import datetime
+
+with socket.socket() as s:
+    s.bind(("0.0.0.0", 8000))
+    s.listen(1)
+    print("Serveur dynamique en écoute...")
+    conn, addr = s.accept()
+    with conn:
+        print("Connexion de", addr)
+        lignes = []
+        while True:
+            ligne = conn.recv(1024).decode()
+            lignes.append(ligne)
+            if "\r\n\r\n" in ligne or "\n\n" in ligne:
+                break
+
+        premiere_ligne = lignes[0].splitlines()[0]
+        print("Requête :", premiere_ligne)
+
+        try:
+            methode, chemin, version = premiere_ligne.split()
+        except ValueError:
+            chemin = "/"
+
+        if chemin == "/date":
+            corps = f"Nous sommes le {datetime.now().strftime('%A %d %B %Y, %H:%M:%S')}"
+        else:
+            corps = "404 Not Found"
+
+        reponse = f"""HTTP/1.1 200 OK
+Content-Type: text/plain
+Content-Length: {len(corps)}
+Connection: close
+
+{corps}"""
+        conn.sendall(reponse.encode())
