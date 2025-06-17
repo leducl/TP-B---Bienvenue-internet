@@ -1,0 +1,30 @@
+1. Est-ce que votre client (navigateur, curl, telnet…) reçoit bien une réponse ? Quel contenu voyez-vous à l’écran ?
+
+Oui, le client reçoit une réponse. À l’écran, on voit le texte "Hello World!" qui s’affiche.
+
+2. Quelle est la structure exacte du message que vous renvoyez (statut, entêtes, ligne vide, corps) ?
+
+D’abord on a la ligne de statut : HTTP/1.1 200 OK.
+Ensuite les entêtes : Content-Type: text/plain, Content-Length: 12, Connection: close.
+Puis une ligne vide pour dire "les entêtes sont finis".
+Enfin le corps contient : Hello World!.
+
+3. Que se passe-t-il si vous changez Content-Length: 12 en une autre valeur ?
+
+Si on met une valeur plus petite, le client n’affiche qu’une partie du texte.
+Si on met une valeur plus grande, le client peut attendre plus de données qui n’arrivent jamais.
+
+4. Que se passe-t-il si vous omettez complètement cette ligne ?
+
+Certains clients arrivent à afficher le texte (parfois en mode "chunked" ou lecture jusqu’à la fermeture de la connexion).
+D’autres peuvent bloquer ou ne pas afficher car ils ne savent pas combien de données lire.
+
+5. Que se passe-t-il si vous supprimez la ligne vide entre les entêtes et le message ? Le navigateur ou le client affiche-t-il encore quelque chose ?
+
+Le client ne sait pas où commencent les données. Souvent, rien ne s’affiche ou un message d’erreur s’affiche. La ligne vide est obligatoire.
+
+6. Le message s’affiche-t-il dans telnet ? Et dans curl ? Et dans un navigateur ? Pourquoi certains outils sont-ils plus stricts que d’autres ?
+
+Dans telnet, on voit tout car telnet affiche les données brutes sans rien vérifier.
+Dans curl, ça dépend : il est assez souple mais peut signaler des erreurs.
+Le navigateur est le plus strict, il respecte bien le protocole HTTP et peut refuser d’afficher s’il manque des parties.
