@@ -1,38 +1,61 @@
-Quelle est la structure de la ligne GET / HTTP/1.1 ? Quels sont les trois éléments et leur rôle ?
+Analyse d'une Requête HTTP
+1. Quelle est la structure de la ligne GET / HTTP/1.1 ?
+Cette ligne se compose de trois éléments principaux :
 
-La ligne contient GET, qui est la méthode pour demander une ressource. Ensuite /, qui est l’adresse de la ressource (ici la racine du site). Enfin HTTP/1.1, qui est la version du protocole utilisée.
+GET : méthode HTTP qui indique qu'on souhaite récupérer une ressource.
 
-2. Pourquoi faut-il appuyer deux fois sur Entrée pour que le serveur réponde ? Que représente cette ligne vide dans le protocole HTTP ?
+/ : chemin de la ressource demandée (ici, la racine du site).
 
-La ligne vide sert à dire qu’on a fini d’envoyer la requête. Sans cette ligne vide, le serveur pense qu’on n’a pas fini et il attend encore.
+HTTP/1.1 : version du protocole HTTP utilisée pour la requête.
 
-3. Que se passe-t-il si vous oubliez cette ligne vide ? Le serveur répond-il quand même ?
+2. Pourquoi faut-il appuyer deux fois sur Entrée pour que le serveur réponde ?
+La ligne vide indique la fin de la requête. Sans cette ligne, le serveur attend encore car il pense que la requête est incomplète.
 
-Non, le serveur ne répond pas. Il attend toujours la fin de la requête car il croit qu’on n’a pas terminé.
+3. Que se passe-t-il si vous oubliez cette ligne vide ?
+Le serveur ne répond pas. Il attend toujours la fin de la requête car il croit qu'elle n’est pas terminée.
 
-4. Que signifie le code 200 OK dans la réponse ? Qu’indique un code 404 ou 301 ?
+4. Que signifie le code 200 OK dans la réponse ? Que signifient les codes 404 ou 301 ?
+200 OK : la requête a réussi, la ressource a été trouvée.
 
-Le code 200 OK veut dire que tout s’est bien passé et que la ressource a été trouvée. Le 404 veut dire que la ressource n’existe pas. Le 301 veut dire que la ressource a été déplacée ailleurs.
+404 Not Found : la ressource demandée n’existe pas.
 
-5. Quelle est la toute première ligne envoyée par le serveur ? Que contient-elle ?
+301 Moved Permanently : la ressource a été déplacée de façon permanente vers une autre URL.
 
-La première ligne est par exemple HTTP/1.1 200 OK. Elle contient la version du protocole, le code de réponse, et le message expliquant le code.
+5. Quelle est la toute première ligne envoyée par le serveur ?
+Exemple :
 
-6. Relevez les entêtes présents dans la réponse (Content-Type, Content-Length, etc.) : à quoi servent-ils ?
+Copier
+Modifier
+HTTP/1.1 200 OK
+Cette ligne contient :
 
-Content-Type indique le type de contenu (par exemple du HTML ou une image).
-Content-Length donne la taille du contenu.
-Date indique quand la réponse a été envoyée.
-Server donne le nom du serveur qui a répondu.
+La version du protocole,
+
+Le code de réponse,
+
+Le message associé au code.
+
+6. Relevez les entêtes présents dans la réponse : à quoi servent-ils ?
+Content-Type : type du contenu (ex. : text/html, image/png, etc.).
+
+Content-Length : taille du contenu en octets.
+
+Date : date et heure de la réponse.
+
+Server : information sur le serveur ayant répondu.
 
 7. Quelle est la première ligne non entête du corps ? À quoi reconnaît-on la séparation ?
+La première ligne du corps est souvent :
 
-La première ligne du corps est souvent <!DOCTYPE html> ou une balise <html>. On reconnaît la séparation avec la ligne vide qui termine la partie des entêtes.
+html
+Copier
+Modifier
+<!DOCTYPE html>
+ou une balise <html>.
+La séparation entre entêtes et corps se fait grâce à une ligne vide.
 
-8. Que se passe-t-il si vous tapez une URL invalide (ex : GET /truc HTTP/1.1) ? Quel est le code de retour ?
-
-Le serveur répond avec le code 404 Not Found car il ne trouve pas la ressource demandée.
+8. Que se passe-t-il si vous tapez une URL invalide (ex : GET /truc HTTP/1.1) ?
+Le serveur renvoie un code 404 Not Found : la ressource n'existe pas.
 
 9. Le contenu retourné dans ce cas est-il aussi du HTML ? Que contient-il exactement ?
-
-Oui, même en cas d’erreur 404, le serveur envoie souvent du HTML. Ce HTML contient un message d’erreur disant que la page n’a pas été trouvée.
+Oui, même en cas d’erreur 404, le contenu est souvent en HTML. Il contient une page d’erreur expliquant que la ressource demandée est introuvable.
